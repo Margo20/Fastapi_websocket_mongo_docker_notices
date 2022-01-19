@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    command: mongod --noauth
+    container_name: mongodb
+    image: mongo:4.4.5-bionic
+    ports:
+      - "27017:27017"
+    volumes:
+      - .:/app/
+    networks:
+      - external_network
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn fastapi_service:api --host 0.0.0.0 --port 8080
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    networks:
+      - external_network
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python3 consumer.py
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - fastapi
+    networks:
+      - external_network
+
+
+networks:
+  external_network:
+    external:
+      name: bridge_network_inno_automate
