@@ -22,7 +22,7 @@ for idx, message in enumerate(consumer):
     logger.info('the consumer has successfully received user_id: %s' % (decoded_user_id))
     # send_notice(decoded_user_id)
     requests.post(
-        "http://fastapi:8080/my_send_notice",
+        "http://fastapi:8080/send_user_id",
         json={
             "user_id": decoded_user_id,
             "password": password

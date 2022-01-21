@@ -5,3 +5,5 @@ Fastapi, mongodb,websocket, docker, docker-compose
 
 use hash_password.py <your password>
 put result to .env
+
+### Messages are received from kafka Trading_platform
