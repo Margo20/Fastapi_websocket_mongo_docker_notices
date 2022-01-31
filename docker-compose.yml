@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uvicorn fastapi_service:api --host 0.0.0.0 --port 8080
+    command: uvicorn fastapi_service:api --host 0.0.0.0 --port 8080 --log-config ./fastapi_service_log.yaml
 
     volumes:
       - .:/app

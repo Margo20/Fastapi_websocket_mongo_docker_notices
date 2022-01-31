@@ -21,11 +21,15 @@ for idx, message in enumerate(consumer):
     decoded_user_id = int.from_bytes(message.value, byteorder='big')
     logger.info('the consumer has successfully received user_id: %s' % (decoded_user_id))
     # send_notice(decoded_user_id)
-    requests.post(
+    response_post = requests.post(
         "http://fastapi:8080/send_user_id",
         json={
             "user_id": decoded_user_id,
             "password": password
         })
-    logger.info('user_id: %s, index: %s' % (decoded_user_id, idx))
-    consumer.commit_offsets()
+
+    logger.info('send result user_id: %s, index: %s, status_code: %s, text: %s' % (decoded_user_id, idx, response_post.status_code, response_post.text))
+    if response_post.ok:
+        consumer.commit_offsets()
+    else:
+        logger.fatal('cannot send result user_id: %s, index: %s, status_code: %s, text: %s' % (decoded_user_id, idx, response_post.status_code, response_post.text))
